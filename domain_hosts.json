@@ -1,0 +1,5 @@
+{
+	"mysqli": ["localhost", "username", "password", "database"],
+	"mysqli_query": "SELECT idx,domain FROM domains_tbl WHERE idx < 65536 AND LENGTH(domain) < 128 ORDER BY idx ASC",
+	"ip_prefixes": ["c0a8", "fe8f0000f000000100000000c0a8"]
+}

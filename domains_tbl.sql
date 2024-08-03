@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS domains_tbl_tmp (id INTEGER PRIMARY KEY AUTO_INCREMENT, `domain` VARCHAR(255), UNIQUE KEY (`domain`));
+CREATE TABLE IF NOT EXISTS domains_tbl (id INTEGER UNSIGNED PRIMARY KEY AUTO_INCREMENT, `domain` VARCHAR(255), `idx` INTEGER UNSIGNED, UNIQUE KEY (`domain`), UNIQUE KEY (`idx`));
+
+INSERT IGNORE INTO domains_tbl (`domain`, `idx`) SELECT `domain`, id FROM domains_tbl_tmp WHERE id < 65535;
