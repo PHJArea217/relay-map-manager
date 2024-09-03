@@ -18,14 +18,29 @@ function feed_domain($domain) {
 	try {
 		$stmt_insert->bind_param("s", $domain);
 		$stmt_insert->execute();
-		return intval($mysqli->insert_id());
+		return intval($mysqli->insert_id);
 	} catch (Exception $e) {
 		// Slow path check. Wastes an id.
 		return 0;
 	}
 }
+function feed_domain_sanitized($domain) {
+	$domain_l = strspn($domain, "abcdefghijklmnopqrstuvwxyz0123456789-_.");
+	$domain_s = substr($domain, 0, $domain_l);
+	feed_domain($domain_s);
+}
 if ($argv[2]) {
-	echo strval(feed_domain($argv[2]));
+	switch ($argv[2]) {
+		case '.':
+			foreach (array_slice($argv, 3) as $domain) {
+				echo strval(feed_domain_sanitized($domain)) . '\n';
+			}
+		case '/':
+			$domains = json_decode(file_get_contents($argv[3]));
+			foreach ($domains as $domain) {
+				echo strval(feed_domain_sanitized($domain)) . '\n';
+			}
+	}
 	exit;
 }
 $domain_recv_sock = socket_create(AF_UNIX, SOCK_DGRAM, 0);
@@ -35,9 +50,7 @@ while (true) {
 	socket_recv($domain_recv_sock, $recv_data, 512);
 	if (str_starts_with($recv_data, "sni_proxy_needed_for \"")) {
 		$domain = substr($recv_data, 22, 490);
-		$domain_l = strspn($domain, "abcdefghijklmnopqrstuvwxyz0123456789-_.");
-		$domain_s = substr($domain, 0, $domain_l);
-		feed_domain($domain_s);
+		feed_domain_sanitized($domain);
 	}
 }
 ?>

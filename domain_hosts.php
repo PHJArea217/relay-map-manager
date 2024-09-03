@@ -63,8 +63,8 @@ while ($row = $mysqli_result->fetch_row()) {
 			$libc_func->symlink("X," . $ip_str, $options["staticdir"] . "/l," . $d);
 		}
 		fprintf($output_file_txt, "%s %s\n", $ip_str, $d);
+		$first = false;
 	}
-	$first = false;
 	$domain_builder->add_ent($row[0], $d);
 }
 fclose($output_file_txt);
