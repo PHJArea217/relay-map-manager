@@ -27,7 +27,7 @@ function feed_domain($domain) {
 function feed_domain_sanitized($domain) {
 	$domain_l = strspn($domain, "abcdefghijklmnopqrstuvwxyz0123456789-_.");
 	$domain_s = substr($domain, 0, $domain_l);
-	feed_domain($domain_s);
+	return feed_domain($domain_s);
 }
 if ($argv[2]) {
 	switch ($argv[2]) {
